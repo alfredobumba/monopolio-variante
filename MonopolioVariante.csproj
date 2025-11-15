@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Define o SDK do .NET a ser usado. Neste caso, usa-se o SDK padrão para aplicações .NET. -->
+
+  <PropertyGroup>
+    <!-- Grupo de propriedades do projeto -->
+
+    <OutputType>Exe</OutputType>
+    <!-- Define o tipo de saída do projeto.
+         Exe significa que o projeto será compilado como um aplicativo executável (console). -->
+
+    <TargetFramework>net9.0</TargetFramework>
+    <!-- Define a versão do .NET usada para compilar o projeto.
+         Aqui está configurado para .NET 8.0. -->
+
+    <RootNamespace>MonopolioVariante</RootNamespace>
+    <!-- Define o namespace raiz padrão para todas as classes do projeto.
+         Se não for especificado, o namespace padrão será baseado na pasta/projeto. -->
+
+    <ImplicitUsings>disable</ImplicitUsings>
+    <!-- Controla a geração automática de diretivas 'using'.
+         disable significa que o compilador **não** adiciona usings implícitos automaticamente. -->
+
+    <Nullable>disable</Nullable>
+    <!-- Configura o suporte a referências nulas.
+         disable significa que o compilador **não** faz checagem de nulidade para tipos de referência. -->
+  </PropertyGroup>
+
+</Project>
