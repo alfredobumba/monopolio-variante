@@ -23,7 +23,7 @@ monopolio-project/
 │   ├── Space.cs            # Classe de espaço do tabuleiro
 │   └── Enums.cs            # Enumerações (SpaceType, CardType)
 ├── MonopolioVariante.csproj # Arquivo de projeto .NET
-├── Monopolio_Fluxograma.fprg # Fluxograma Flowgorithm
+├── Monopolio_Fluxograma    # Fluxograma Flowgorithm
 └── README.md               # Esta documentação
 ```
 

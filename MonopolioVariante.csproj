@@ -8,7 +8,7 @@
     <!-- Define o tipo de saída do projeto.
          Exe significa que o projeto será compilado como um aplicativo executável (console). -->
 
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <!-- Define a versão do .NET usada para compilar o projeto.
          Aqui está configurado para .NET 8.0. -->
 
