@@ -346,7 +346,7 @@ Conforme especificação, apenas a **primeira** mensagem de erro é exibida:
 
 ## 📊 Fluxograma
 
-O fluxograma completo está disponível em `Monopolio_Fluxograma.fprg` (formato Flowgorithm), ilustrando:
+O fluxograma completo está disponível em (formato Flowgorithm), ilustrando:
 
 - Loop principal do programa
 - Processamento de comandos
@@ -421,16 +421,17 @@ As seguintes funcionalidades **não** foram implementadas pois não estavam no e
 Projeto acadêmico - Universidade Europeia-IADE.
 
 ## 👥 Autor: 
-Alfredo Bumba 20221435
+Alfredo Bumba - 20221435
+Marcio        -
+Tiago Pascual -
+Junior Luemba -
 
 
-
-
-Desenvolvido como projeto de programação orientada a objetos em C#.
+Desenvolvido como projeto de Fundamento de programação e Estruturação do Pensamento Lógico, feito em C#.
 
 ---
 
-**Data de Criação**:Novembro de 2025  
+**Data de Criação**:2025  
 **Versão**: 1.0  
 **Framework**: .NET 8.0  
 **Linguagem**: C#
