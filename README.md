@@ -421,10 +421,10 @@ As seguintes funcionalidades **não** foram implementadas pois não estavam no e
 Projeto acadêmico - Universidade Europeia-IADE.
 
 ## 👥 Autor: 
-Alfredo Bumba - 20221435
-Marcio        -
-Tiago Pascual -
-Junior Luemba -
+**Alfredo Bumba - 20221435**
+**Marcio Nhanga - 20252075**
+**Tiago Pascoal - 20252041**
+**José Luemba   - 20251276**
 
 
 Desenvolvido como projeto de Fundamento de programação e Estruturação do Pensamento Lógico, feito em C#.
