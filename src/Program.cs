@@ -1,29 +1,42 @@
-using System; // Importa o namespace System, que contém classes básicas como Console para entrada e saída.
+// Importa a classe Console para ler e escrever no terminal
+using System;
+// Importa o GameManager para gerenciar o jogo
+using MonopolioVariante.Managers;
 
-namespace MonopolioVariante // Define um namespace chamado MonopolioVariante, que serve para organizar o código.
+// Define o namespace principal da aplicação
+namespace MonopolioVariante
 {
-    class Program // Define a classe principal do programa chamada Program.
+    // Classe principal do programa
+    // Esta é a classe que é executada quando o programa inicia
+    class Program
     {
-        static void Main(string[] args) // Método Main: ponto de entrada do programa. É aqui que a execução começa.
+        // Método Main: ponto de entrada do programa
+        // É o primeiro método executado quando o programa inicia
+        // args: argumentos da linha de comando (não usado neste caso)
+        static void Main(string[] args)
         {
-            // Cria uma instância da classe GameManager, que provavelmente gerencia a lógica do jogo.
+            // Cria um novo gerenciador de jogo
+            // Este objeto vai processar todos os comandos do utilizador
             GameManager gameManager = new GameManager();
             
-            // Loop infinito que ficará esperando comandos do usuário.
+            // Loop infinito: continua até o utilizador dar uma linha vazia
             while (true)
             {
-                // Lê uma linha digitada pelo usuário no console.
+                // Lê uma linha de texto do terminal (comando do utilizador)
                 string input = Console.ReadLine();
                 
-                // Se o usuário não digitar nada (linha vazia ou só espaços), o loop é interrompido.
+                // Verifica se a linha está vazia ou só tem espaços em branco
                 if (string.IsNullOrWhiteSpace(input))
                 {
+                    // Se estiver vazia, sai do loop (termina o programa)
                     break;
                 }
                 
-                // Caso haja algum comando, passa a entrada para o GameManager processar.
+                // Processa o comando recebido
+                // O GameManager vai interpretar e executar o comando
                 gameManager.ProcessCommand(input);
             }
+            // Quando sair do loop, o programa termina
         }
     }
 }

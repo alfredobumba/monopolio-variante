@@ -1,437 +1,202 @@
-# Monopólio Variante - Documentação do Projeto
+# Monopolio Variante - Projeto FP/EPL 2025-26
 
-## 📋 Descrição
+## 📋 Identificação do Grupo
 
-Este projeto implementa uma variante do jogo Monopólio em C# (.NET 8), utilizando um tabuleiro expandido de 7x7 (49 casas) com mecânicas de movimento baseadas em coordenadas bidimensionais.
+| Nome | Número | Email |
+|------|--------|-------|
+| [Nome Completo 1] | [Número] | [email@universidadeeuropeia.pt] |
+| [Nome Completo 2] | [Número] | [email@universidadeeuropeia.pt] |
+| [Nome Completo 3] | [Número] | [email@universidadeeuropeia.pt] |
+| [Nome Completo 4] | [Número] | [email@universidadeeuropeia.pt] |
 
-## 🎯 Objetivos
+---
 
-- Implementar todas as regras do jogo conforme especificação
-- Garantir comportamento determinístico e previsível
-- Validar entrada/saída com rigor absoluto
-- Suportar até 4 jogadores simultâneos
+## 🎯 Descrição do Projeto
+
+Implementação de uma variante do jogo Monopoly em C# com tabuleiro 7x7, sistema de dados especiais (-3 a 3), movimento bidimensional e todas as mecânicas especificadas no briefing.
+
+---
 
 ## 🏗️ Estrutura do Projeto
 
 ```
-monopolio-project/
+projeto/
 ├── src/
-│   ├── Program.cs          # Ponto de entrada do programa
-│   ├── GameManager.cs      # Gerenciamento de jogadores e comandos
-│   ├── Game.cs             # Lógica principal do jogo
-│   ├── Player.cs           # Classe de jogador
-│   ├── Space.cs            # Classe de espaço do tabuleiro
-│   └── Enums.cs            # Enumerações (SpaceType, CardType)
-├── MonopolioVariante.csproj # Arquivo de projeto .NET
-├── Monopolio_Fluxograma    # Fluxograma Flowgorithm
-└── README.md               # Esta documentação
+│   ├── Enums/
+│   │   ├── SpaceType.cs      # Tipos de espaços
+│   │   └── CardType.cs       # Tipos de cartas
+│   ├── Models/
+│   │   ├── Player.cs         # Classe jogador
+│   │   └── Space.cs          # Classe espaço
+│   ├── Managers/
+│   │   ├── GameManager.cs    # Gerenciador de comandos
+│   │   └── Game.cs           # Lógica principal do jogo
+│   └── Program.cs            # Ponto de entrada
+├── README.md                 # Este arquivo
+└── MonopolioVariante.csproj  # Configuração do projeto
 ```
 
-## 🎮 Características do Jogo
+---
 
-### Tabuleiro 7x7
-
-O tabuleiro possui 49 espaços distribuídos em uma grade 7x7, com o espaço inicial (Start) localizado no centro (posição 3,3).
-
-#### Distribuição dos Espaços:
-
-**Linha 0 (Topo):**
-- Prison | Green3 | Violet1 | Train2 | Red3 | White1 | BackToStart
-
-**Linha 1:**
-- Blue3 | Community | Red2 | Violet2 | WaterWorks | Chance | White2
-
-**Linha 2:**
-- Blue2 | Red1 | Chance | Brown2 | Community | Black1 | LuxTax
-
-**Linha 3 (Centro):**
-- Train1 | Green2 | Teal1 | **Start** | Teal2 | Black2 | Train3
-
-**Linha 4:**
-- Blue1 | Green1 | Community | Brown1 | Chance | Black3 | White3
-
-**Linha 5:**
-- Pink1 | Chance | Orange1 | Orange2 | Orange3 | Community | Yellow3
-
-**Linha 6 (Fundo):**
-- FreePark | Pink2 | ElectricCompany | Train4 | Yellow1 | Yellow2 | Police
-
-### Sistema de Dados
-
-- **Dois dados especiais**: cada um com valores de -3 a 3 (excluindo 0)
-- **Primeiro dado**: movimento horizontal (negativo = esquerda, positivo = direita)
-- **Segundo dado**: movimento vertical (negativo = baixo, positivo = cima)
-- **Wrap-around**: quando o movimento sai do tabuleiro, continua do lado oposto
-
-#### Exemplos de Movimento:
-- Dados 2/-1 no Start → Black3
-- Dados -1/-3 no Start → ElectricCompany
-- Dados 3/-3 no White2 → Community (com wrap-around)
-
-### Regras Especiais
-
-1. **Doubles (mesmo valor nos dois dados)**:
-   - Permite jogar novamente após completar todas as ações
-   - Dois doubles consecutivos = prisão automática
-
-2. **Prisão**:
-   - Liberdade ao tirar doubles ou após 3 turnos
-   - Posição: espaço Prison (0,0)
-
-3. **Espaço Start**:
-   - Recebe 200 ao terminar movimento aqui
-
-4. **FreePark**:
-   - Acumula valores de taxas e penalidades
-   - Jogador recebe tudo ao parar aqui
-
-5. **LuxTax**:
-   - Valor pago vai para FreePark
-
-## 💻 Comandos Implementados
-
-### 1. RJ - Registar Jogador
-```
-Entrada: RJ NomeJogador
-Sucesso: Jogador registado com sucesso.
-Erro: Jogador existente.
-```
-
-### 2. LJ - Listar Jogadores
-```
-Entrada: LJ
-Sucesso: Lista ordenada por vitórias (decrescente) e alfabeticamente
-Formato: NomeJogador NumJogos NumVitórias NumEmpates NumDerrotas
-Erro: Sem jogadores registados.
-```
-
-### 3. IJ - Iniciar Jogo
-```
-Entrada: IJ NomeJogador1 NomeJogador2 NomeJogador3 NomeJogador4
-Sucesso: Jogo iniciado com sucesso.
-Erros: 
-  - Existe um jogo em curso.
-  - Jogador inexistente.
-```
-
-### 4. LD - Lançar Dados
-```
-Entrada: LD NomeJogador
-Saídas possíveis:
-  - Saiu X/Y – espaço NomeEspaço. Espaço sem dono.
-  - Saiu X/Y – espaço NomeEspaço. Espaço já comprada.
-  - Saiu X/Y – espaço NomeEspaço. Espaço já comprada por outro jogador. Necessário pagar renda.
-  - Saiu X/Y – espaço NomeEspaço. Espaço especial. Tirar carta.
-  - Saiu X/Y - Espaço BackToStart. Peça colocada no espaço Start.
-  - Saiu X/Y – espaço Police. Jogador preso.
-  - Saiu X/Y – espaço Prison. Jogador só de passagem.
-  - Saiu X/Y – espaço FreePark. Jogador recebe [valor].
-```
-
-### 5. CE - Comprar Espaço
-```
-Entrada: CE NomeJogador
-Sucesso: Espaço comprado.
-Erros:
-  - O espaço já se encontra comprado.
-  - Este espaço não está para venda.
-  - O jogador não tem dinheiro suficiente para adquirir o espaço.
-```
-
-#### Preços dos Espaços:
-| Espaço | Preço | Espaço | Preço |
-|--------|-------|--------|-------|
-| Brown1/2 | 100/120 | Red1/2/3 | 130/130/160 |
-| Teal1/2 | 90/130 | Green1/2/3 | 120/140/160 |
-| Orange1/2/3 | 120/120/140 | Blue1/2/3 | 140/140/170 |
-| Black1/2/3 | 110/120/130 | Pink1/2 | 160/180 |
-| White1/2/3 | 160/180/190 | Yellow1/2/3 | 140/140/170 |
-| Violet1/2 | 150/130 | Train1/2/3/4 | 150 cada |
-| Electric/Water | 120 cada | LuxTax | 80 |
-
-### 6. DJ - Detalhes de Jogo
-```
-Entrada: DJ
-Sucesso: Mostra tabuleiro completo com:
-  - Propriedades e donos
-  - Número de casas construídas
-  - Posição de todos os jogadores
-  - Dinheiro do jogador atual
-```
-
-### 7. TT - Terminar Turno
-```
-Entrada: TT NomeJogador
-Sucesso: Turno terminado. Novo turno do jogador [próximo].
-Erros:
-  - Não é o turno do jogador indicado.
-  - O jogador ainda tem ações a fazer.
-  - Não existe jogo em curso.
-```
-
-### 8. PA - Pagar Aluguer
-```
-Entrada: PA NomeJogador
-Sucesso: Aluguer pago.
-Cálculo: PreçoEspaço * 0.25 + PreçoEspaço * 0.75 * NúmeroCasas
-Erros:
-  - Não é necessário pagar aluguer
-  - O jogador não tem dinheiro suficiente.
-```
-
-### 9. CC - Comprar Casa
-```
-Entrada: CC NomeJogador NomeEspaço
-Sucesso: Casa adquirida.
-Preço: PreçoEspaço * 0.6
-Limite: 4 casas por espaço
-Requisito: Possuir todos os espaços da mesma cor
-Erros:
-  - Não é possível comprar casa no espaço indicado.
-  - O jogador não possui todos os espaços da cor
-  - O jogador não possui dinheiro suficiente.
-```
-
-### 10. TC - Tirar Carta
-```
-Entrada: TC NomeJogador
-Sucesso: Mensagem da carta sorteada
-Erros:
-  - Não é possível tirar carta neste espaço.
-  - A carta já foi tirada.
-```
-
-#### Cartas Chance:
-- 20%: Recebe 150
-- 10%: Recebe 200
-- 10%: Paga 70
-- 20%: Move-se para Start
-- 20%: Move-se para Police (prisão)
-- 20%: Move-se para FreePark
-
-#### Cartas Community:
-- 10%: Paga 20 por cada casa
-- 10%: Recebe 10 de cada jogador
-- 20%: Recebe 100
-- 20%: Recebe 170
-- 10%: Paga 40
-- 10%: Move-se para Pink1
-- 10%: Move-se para Teal2
-- 10%: Move-se para White2
-
-## 🔧 Compilação e Execução
+## 🚀 Como Executar
 
 ### Pré-requisitos
 - .NET 8.0 SDK ou superior
-- Visual Studio Code (opcional)
 
-### Compilar o Projeto
+### Compilar
 ```bash
-cd monopolio-project
 dotnet build
 ```
 
-### Executar o Projeto
+### Executar
 ```bash
-dotnet run --project MonopolioVariante.csproj
+dotnet run
 ```
 
-### Teste Manual
-```bash
-# Exemplo de sequência de comandos
+### Exemplo de Uso
+```
 RJ Alice
 RJ Bob
-RJ Carol
-RJ Dave
-LJ
-IJ Alice Bob Carol Dave
-DJ
+RJ Charlie
+RJ Diana
+IJ Alice Bob Charlie Diana
 LD Alice
+DJ
 CE Alice
 TT Alice
 ```
 
-## 🏛️ Arquitetura do Código
+---
 
-### Estrutura Modular
+## 💡 Estratégias de Implementação
 
-O código está organizado em arquivos separados para melhor manutenibilidade:
+### 1. Estrutura de Dados
+- **Tabuleiro**: Array bidimensional 7x7 (`Space[,]`)
+- **Jogadores**: Lista de objetos `Player`
+- **Posições**: Coordenadas X e Y (0-6)
 
-#### 1. **Program.cs**
-- Ponto de entrada da aplicação
-- Gerencia o loop principal de entrada de comandos
-- Mantém a aplicação rodando até linha em branco
+### 2. Sistema de Movimento
+- Wrap-around implementado usando operador módulo
+- Primeiro dado controla eixo X, segundo dado controla eixo Y
+- Validação de doubles consecutivos para prisão
 
-#### 2. **Enums.cs**
-- **SpaceType**: Define tipos de espaços (Property, Train, Utility, etc.)
-- **CardType**: Define tipos de cartas (Chance, Community)
+### 3. Sistema de Cartas
+- Geração aleatória de 1-100 para determinar carta
+- Probabilidades implementadas com intervalos de valores
+- Efeitos aplicados automaticamente
 
-#### 3. **Space.cs**
-- Representa um espaço no tabuleiro
-- Armazena: nome, tipo, preço, cor, dono e casas
-- Método: `CanBePurchased()` para verificar se pode ser comprado
+### 4. Validações
+- Verificação de turno correto
+- Validação de ações obrigatórias (PA, TC)
+- Controlo de estado do jogador
 
-#### 4. **Player.cs**
-- Representa um jogador
-- Armazena estado: dinheiro, posição, flags de ações
-- Armazena estatísticas: jogos, vitórias, empates, derrotas
-- Método: `ResetForNewGame()` para reiniciar estado
-
-#### 5. **GameManager.cs**
-- Gerencia jogadores registrados
-- Processa e valida comandos
-- Controla estado global do jogo
-- Inicializa novos jogos
-
-#### 6. **Game.cs**
-- Implementa lógica do jogo em curso
-- Gerencia tabuleiro 7×7 e turnos
-- Processa movimentos e ações
-- Implementa todas as regras do jogo
-
-### Princípios de Design
-
-- **Separação de Responsabilidades**: Cada classe tem uma função específica
-- **Encapsulamento**: Estado interno protegido e acessado por propriedades
-- **Modularidade**: Código dividido em arquivos lógicos e independentes
-- **Manutenibilidade**: Fácil de entender, modificar e estender
-
-## 🎲 Algoritmos Importantes
-
-### Movimento com Wrap-Around
-```csharp
-int newX = player.PositionX + dice1;
-int newY = player.PositionY + dice2;
-
-while (newX < 0) newX += 7;
-while (newX >= 7) newX -= 7;
-while (newY < 0) newY += 7;
-while (newY >= 7) newY -= 7;
-```
-
-### Geração de Dados
-```csharp
-// Gera valores de -3 a 3, excluindo 0
-int value = random.Next(1, 7);
-return value <= 3 ? -value : value - 3;
-```
-
-### Cálculo de Aluguer
-```csharp
-int rent = (int)(space.Price * 0.25 + space.Price * 0.75 * space.Houses);
-```
-
-### Validação de Turno
-```csharp
-// Jogador deve:
-// 1. Ter lançado os dados pelo menos uma vez
-// 2. Não ter ações pendentes (pagar aluguer ou tirar carta)
-// 3. Não precisar jogar novamente (doubles)
-```
-
-## 🔍 Validações Implementadas
-
-### Ordem de Verificação de Erros
-Conforme especificação, apenas a **primeira** mensagem de erro é exibida:
-
-1. Jogo em curso/inexistente
-2. Jogador inexistente/não participa
-3. Vez do jogador
-4. Condições específicas do comando
-
-### Validação de Comandos
-- Número correto de parâmetros
-- Nomes de comandos válidos
-- Estado do jogo apropriado
-
-## 📊 Fluxograma
-
-O fluxograma completo está disponível em (formato Flowgorithm), ilustrando:
-
-- Loop principal do programa
-- Processamento de comandos
-- Lógica de lançamento de dados
-- Sistema de compra de propriedades
-- Mecânica de cartas
-- Validações e fluxos de erro
-
-## 🧪 Casos de Teste
-
-### Exemplo 1: Jogo Básico
-```
-RJ Alice
-RJ Bob
-IJ Alice Bob Alice Bob
-LJ
-DJ
-```
-
-### Exemplo 2: Movimento e Compra
-```
-RJ Player1
-RJ Player2
-IJ Player1 Player2 Player1 Player2
-LD Player1
-CE Player1
-TT Player1
-```
-
-### Exemplo 3: Wrap-Around
-```
-# Jogador no White2 (5,1), dados 3/-3
-# Posição final: (1,5) = Community
-```
-
-## 🚫 Restrições e Limitações
-
-- Não são utilizadas bibliotecas externas
-- Apenas .NET 8 standard library
-- Entrada via console (stdin)
-- Saída via console (stdout)
-- Sem interface gráfica
-- Sem persistência de dados
-
-## 📝 Notas de Implementação
-
-### Decisões de Design
-
-1. **Estrutura Modular**: Separação clara entre gerenciamento de jogadores, jogo e comandos
-2. **Validação Rigorosa**: Todas as condições de erro são verificadas na ordem especificada
-3. **Estado Explícito**: Flags claras para ações obrigatórias (NeedsToPayRent, NeedsToDrawCard)
-4. **Determinismo**: Mesmo com aleatoriedade, o comportamento é previsível
-
-### Complexidade
-
-- **Temporal**: O(1) para maioria das operações
-- **Espacial**: O(n) onde n é o número de jogadores e espaços
-
-## 🔮 Possíveis Extensões (Não Implementadas)
-
-As seguintes funcionalidades **não** foram implementadas pois não estavam no enunciado:
-
-- Sistema de save/load
-- Interface gráfica
-- Modo multiplayer em rede
-- IA para jogadores
-- Estatísticas avançadas
-- Animações
-
-## 📄 Licença
-
-Projeto acadêmico - Universidade Europeia-IADE.
-
-## 👥 Autor: 
-**Alfredo Bumba - 20221435**
-**Marcio Nhanga - 20252075**
-**Tiago Pascoal - 20252041**
-**José Luemba   - 20251276**
-
-
-Desenvolvido como projeto de Fundamento de programação e Estruturação do Pensamento Lógico, feito em C#.
+### 5. Comentários no Código
+Todo o código está comentado linha por linha em português para facilitar a compreensão e manutenção.
 
 ---
 
-**Data de Criação**:2025  
-**Versão**: 1.0  
-**Framework**: .NET 8.0  
-**Linguagem**: C#
+## 📊 Distribuição de Tarefas
+
+| Membro | Tarefas Principais |
+|--------|-------------------|
+| [Nome 1] | [Ex: Estrutura base, classes Player e Space] |
+| [Nome 2] | [Ex: Sistema de movimento e dados, wrap-around] |
+| [Nome 3] | [Ex: Sistema de cartas, lógica de compras] |
+| [Nome 4] | [Ex: Validações, testes, documentação] |
+
+**Nota:** Todos os membros participaram em todas as fases do projeto, com estas sendo as áreas de maior foco individual.
+
+---
+
+## 🧪 Testes Realizados
+
+- ✅ Todos os comandos (RJ, LJ, IJ, LD, CE, DJ, TT, PA, CC, TC)
+- ✅ Sistema de wrap-around
+- ✅ Sistema de prisão (doubles, 3 turnos)
+- ✅ Cartas Chance e Community
+- ✅ Cálculo de alugueres
+- ✅ Sistema FreePark
+- ✅ Validações de turno e ações
+
+---
+
+## 📚 Funcionalidades Implementadas
+
+### Comandos
+- [x] RJ - Registar Jogador
+- [x] LJ - Listar Jogadores  
+- [x] IJ - Iniciar Jogo
+- [x] LD - Lançar Dados
+- [x] CE - Comprar Espaço
+- [x] DJ - Detalhes do Jogo
+- [x] TT - Terminar Turno
+- [x] PA - Pagar Aluguer
+- [x] CC - Comprar Casa
+- [x] TC - Tirar Carta
+
+### Mecânicas
+- [x] Tabuleiro 7x7
+- [x] Dados -3 a 3 (sem 0)
+- [x] Movimento bidimensional
+- [x] Wrap-around
+- [x] Sistema de prisão
+- [x] Doubles consecutivos
+- [x] Cartas Chance (6 tipos)
+- [x] Cartas Community (8 tipos)
+- [x] Sistema de alugueres
+- [x] Compra de casas (máx 4)
+- [x] FreePark
+- [x] Sistema de estatísticas
+
+---
+
+## 🐛 Problemas Conhecidos e Soluções
+
+### [Se houver algum problema conhecido, descrever aqui]
+Exemplo:
+- **Problema:** [Descrição]
+- **Solução:** [Como foi resolvido]
+
+---
+
+## 📖 Decisões de Design
+
+### 1. Organização em Múltiplos Arquivos
+Optámos por dividir o código em arquivos separados por responsabilidade (Enums, Models, Managers) para melhor organização e manutenibilidade.
+
+### 2. Comentários Extensivos
+Todo o código foi comentado linha por linha para facilitar a compreensão e revisão.
+
+### 3. Validações Rigorosas
+Implementámos validações em todas as operações para garantir que o jogo segue exatamente as regras especificadas.
+
+### 4. Gerador de Números Aleatórios
+Usámos `Random` para gerar valores de dados e cartas, garantindo variabilidade no jogo.
+
+---
+
+## 📝 Notas Adicionais
+
+[Espaço para quaisquer comentários adicionais, dificuldades encontradas, aprendizagens, etc.]
+
+---
+
+## 🎓 Unidades Curriculares
+
+- **Fundamentos da Programação**: Implementação em C#, estruturas de dados, algoritmos
+- **Estruturação do Pensamento Lógico**: Estrutura lógica do programa, algoritmos
+
+---
+
+## 📅 Informações do Projeto
+
+- **Ano Letivo:** 2025-2026
+- **Data de Entrega:** 12/12/2025
+- **Docentes:**
+  - Anastasiya Zyenina
+  - Andreia Artifice
+  - Nathan Campos
+
+---
+
+**Nota:** Este projeto foi desenvolvido cumprindo rigorosamente todas as especificações do briefing fornecido.
