@@ -5,9 +5,9 @@
 | Nome | Número |
 |------|--------|
 | Alfredo Bumba | 20221435 |
-| [Jose Luemba] | 2025 | 
-| [Marcio Nhanga] | 20252075 |
-| [Tiago Pascoal] | 2025 | 
+| Jose Luemba   | 20251276 | 
+| Marcio Nhanga | 20252075 |
+| Tiago Pascoal | 20252041 | 
 
 ---
 
