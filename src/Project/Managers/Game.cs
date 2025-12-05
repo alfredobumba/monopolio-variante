@@ -145,12 +145,22 @@ namespace MonopolioVariante.Managers
                 return;  // Sai do método
             }
 
+            // CORREÇÃO: Verifica se o jogador já lançou os dados (exceto se precisa jogar de novo por double)
+            if (player.HasRolledDice && !player.MustRollAgain)
+            {
+                Console.WriteLine("O jogador já lançou os dados neste turno.");
+                return;
+            }
+
             // Gera dois valores de dados (cada um de -3 a +3, exceto 0)
             int dice1 = GetRandomDiceValue();  // Primeiro dado
             int dice2 = GetRandomDiceValue();  // Segundo dado
 
             // Marca que o jogador já lançou os dados neste turno
             player.HasRolledDice = true;
+            
+            // Se estava com flag de jogar novamente, reseta (porque já jogou agora)
+            player.MustRollAgain = false;
 
             // --- VERIFICAR SE O JOGADOR ESTÁ PRESO ---
             if (player.InPrison)
@@ -215,6 +225,7 @@ namespace MonopolioVariante.Managers
                     player.PositionX = 0;            // Move para Prison (0, 0)
                     player.PositionY = 0;
                     player.ConsecutiveDoubles = 0;   // Reseta contador
+                    player.MustRollAgain = false;    // CORREÇÃO: Reseta flag de jogar novamente
                     // Mostra mensagem de prisão
                     Console.WriteLine($"Saiu {dice1}/{dice2} – espaço Police. Jogador preso.");
                     return;  // Termina o turno
@@ -256,6 +267,7 @@ namespace MonopolioVariante.Managers
                     player.InPrison = true;      // Marca como preso
                     player.PositionX = 0;        // Move para Prison (0, 0)
                     player.PositionY = 0;
+                    player.MustRollAgain = false; // CORREÇÃO: Não pode jogar novamente se está preso
                     Console.WriteLine($"Saiu {dice1}/{dice2} – espaço Police. Jogador preso.");
                     break;
 
@@ -754,7 +766,7 @@ namespace MonopolioVariante.Managers
             // Verifica se o jogador ainda não lançou os dados
             if (!player.HasRolledDice)
             {
-                Console.WriteLine("O jogador ainda tem ações a fazer.");
+                Console.WriteLine("O jogador tem de lançar os dados primeiro.");
                 return;
             }
 
@@ -768,7 +780,7 @@ namespace MonopolioVariante.Managers
             // Verifica se o jogador tirou double e precisa jogar de novo
             if (player.MustRollAgain)
             {
-                Console.WriteLine("O jogador ainda tem ações a fazer.");
+                Console.WriteLine("O jogador tirou double e tem que jogar novamente.");
                 return;
             }
 
@@ -798,35 +810,43 @@ namespace MonopolioVariante.Managers
 
             Console.WriteLine(); // Linha em branco antes do tabuleiro
 
-            // --- CALCULAR LARGURA DAS COLUNAS ---
-            int[] columnWidths = new int[7];
-            for (int x = 0; x < 7; x++)
-            {
-                int maxWidth = 10; // Largura mínima
-                for (int y = 0; y < 7; y++)
-                {
-                    int width = GetCellContent(x, y).Length;
-                    if (width > maxWidth) maxWidth = width;
-                }
-                columnWidths[x] = maxWidth;
-            }
-
-            // --- DESENHAR TABULEIRO COM BORDAS ---
-            DrawHorizontalLine(columnWidths);
-
+            // --- IMPRIMIR CADA LINHA DO TABULEIRO ---
             for (int y = 0; y < 7; y++)
             {
-                // Linha de conteúdo
-                Console.Write("|");
+                Console.Write("|"); // Barra inicial
+                
                 for (int x = 0; x < 7; x++)
                 {
-                    string content = GetCellContent(x, y);
-                    Console.Write(" " + content.PadRight(columnWidths[x]) + " |");
-                }
-                Console.WriteLine();
+                    Space space = board[y, x];
+                    string content = space.Name;
 
-                // Linha divisória
-                DrawHorizontalLine(columnWidths);
+                    // Adicionar dono e casas
+                    if (space.Owner != null)
+                    {
+                        content += $" ({space.Owner.Name}";
+                        if (space.Houses > 0)
+                        {
+                            content += $" - {space.Houses}";
+                        }
+                        content += ")";
+                    }
+
+                    // Adicionar jogadores na posição
+                    var playersHere = players.Where(p => 
+                        (p.PositionX == x && p.PositionY == y && !p.InPrison) ||
+                        (p.InPrison && x == 0 && y == 0)
+                    ).Select(p => p.Name).ToList();
+
+                    if (playersHere.Count > 0)
+                    {
+                        content += " " + string.Join(" ", playersHere);
+                    }
+
+                    // Imprimir célula com espaço e barra
+                    Console.Write(" " + content + " |");
+                }
+                
+                Console.WriteLine(); // Nova linha
             }
 
             Console.WriteLine(); // Linha em branco após o tabuleiro
@@ -834,48 +854,6 @@ namespace MonopolioVariante.Managers
             // --- MOSTRA INFO DO JOGADOR ATUAL ---
             Player currentPlayer = players[currentPlayerIndex];
             Console.WriteLine($"{currentPlayer.Name} - {currentPlayer.Money}");
-        }
-
-        // Método auxiliar para obter o conteúdo de uma célula
-        private string GetCellContent(int x, int y)
-        {
-            Space space = board[y, x];
-            string content = space.Name;
-
-            // Adicionar dono e casas
-            if (space.Owner != null)
-            {
-                content += $" ({space.Owner.Name}";
-                if (space.Houses > 0)
-                {
-                    content += $" - {space.Houses}";
-                }
-                content += ")";
-            }
-
-            // Adicionar jogadores na posição
-            var playersHere = players.Where(p => 
-                (p.PositionX == x && p.PositionY == y && !p.InPrison) ||
-                (p.InPrison && x == 0 && y == 0)
-            ).Select(p => p.Name).ToList();
-
-            if (playersHere.Count > 0)
-            {
-                content += " " + string.Join(" ", playersHere);
-            }
-
-            return content;
-        }
-
-        // Método auxiliar para desenhar linha horizontal
-        private void DrawHorizontalLine(int[] columnWidths)
-        {
-            Console.Write("+");
-            for (int x = 0; x < 7; x++)
-            {
-                Console.Write(new string('-', columnWidths[x] + 2) + "+");
-            }
-            Console.WriteLine();
         }
 
         // Gera um valor aleatório de dado

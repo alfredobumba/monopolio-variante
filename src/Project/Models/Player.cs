@@ -5,7 +5,7 @@ namespace MonopolioVariante.Models
     // Cada jogador tem dinheiro, posição, status de prisão, estatísticas, etc
     public class Player
     {
-        // Nome do jogador (ex: "Alice", "Bob")
+        // Nome do jogador (ex: "Alferdo", "Bumba")
         public string Name { get; set; }
         
         // Quantidade de dinheiro que o jogador tem
@@ -68,7 +68,7 @@ namespace MonopolioVariante.Models
         public Player(string name)
         {
             Name = name;                    // Define o nome
-            Money = 600;                    // Começa com 600 de dinheiro
+            Money = 1200;                    // Começa com 1200 de dinheiro
             PositionX = 3;                  // Posição inicial X (Start)
             PositionY = 3;                  // Posição inicial Y (Start)
             InPrison = false;               // Não está preso
@@ -89,7 +89,7 @@ namespace MonopolioVariante.Models
         // Mantém as estatísticas (Wins, Losses, etc) mas reseta posição e dinheiro
         public void ResetForNewGame()
         {
-            Money = 600;                    // Volta para 600 de dinheiro
+            Money = 1200;                    // Volta para 1200 de dinheiro
             PositionX = 3;                  // Volta para posição inicial X
             PositionY = 3;                  // Volta para posição inicial Y
             InPrison = false;               // Não está mais preso
