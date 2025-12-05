@@ -402,10 +402,9 @@ Todas as mensagens de saída foram implementadas **exatamente** como especificad
 
 - **Ano Letivo:** 2025-2026, 1º Semestre
 - **Curso:** Engenharia Informática
-- **Instituição:** Universidade Europeia
+- **Instituição:** Universidade Europeia - IADE
 - **Data de Entrega:** 12 de dezembro de 2025, 23:59:59 GMT
 - **Prova de Autoria:** 15-19 de dezembro de 2025
-- **Formato de Entrega:** Ficheiro .zip via Canvas
 
 ### Docentes
 - **Anastasiya Zyenina** - anastasiya.zyenina@ext.universidadeeuropeia.pt
